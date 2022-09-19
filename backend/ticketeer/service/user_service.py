@@ -2,7 +2,7 @@ import logging
 from injector import inject
 from flask import g
 
-from scoutsticketservice.service.icon_service import IconService
+from .icon_service import IconService
 
 from ..error.custom_errors import ConflictError, NotFoundError, PermissionError
 
