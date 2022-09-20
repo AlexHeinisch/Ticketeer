@@ -1,5 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import injector
 
-custom_injector = injector.Injector()
+
 db = SQLAlchemy()
+migrate = Migrate()
+custom_injector = injector.Injector()

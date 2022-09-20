@@ -1,13 +1,14 @@
 from flask import Flask
 from flask_cors import CORS
-import json
 
 # Flask Injector
-import injector
 from flask_injector import FlaskInjector
 
-# Extensions
-from .extensions import db, custom_injector
+# extensions
+from .extensions import custom_injector, db, migrate
+
+# config loading
+from .config import load_config
 
 # Dependency Injection config
 from .dependencies import configure
@@ -15,9 +16,7 @@ from .dependencies import configure
 # Blueprints
 from .endpoint.ticket_endpoint import ticket
 from .endpoint.user_endpoint import user
-
 from .security.authentication import authentication
-
 from .error.error_handlers import error_handlers
 
 
@@ -26,16 +25,13 @@ def create_app(test_config=None, injector_module=None) -> Flask:
     app = Flask(__name__, instance_relative_config=True)
     CORS(app)
 
-    app.config.from_mapping(
-        SECRET_KEY='dev'
-    )
-
     if test_config is None:
-        app.config.from_file('config.json', load=json.load)
+        app.config.from_object(load_config())
     else:
         app.config.from_mapping(test_config)
 
     db.init_app(app)
+    migrate.init_app(app, db) 
 
     app.register_blueprint(ticket, url_prefix='/ticket')
     app.register_blueprint(user, url_prefix='/user')

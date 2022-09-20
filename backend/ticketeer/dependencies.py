@@ -6,7 +6,7 @@ from .repository.impl.sqlalchemy_user_repository import SQLAlchemyUserRepository
 
 from flask_sqlalchemy import SQLAlchemy
 
-from .extensions import db
+from .import db
 from injector import Binder, singleton
 
 def configure(binder: Binder):
