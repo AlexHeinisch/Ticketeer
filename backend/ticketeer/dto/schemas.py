@@ -103,7 +103,7 @@ class UserSearchRequestSchema(Schema):
     )
 
     @post_load
-    def make(self, data, **kwargs):
+    def make(self, data, **kwargs) -> UserSearchRequest:
         if 'username' not in data:
             data['username'] = None
         if 'email' not in data:

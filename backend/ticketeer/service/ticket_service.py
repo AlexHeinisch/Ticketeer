@@ -1,9 +1,4 @@
-from injector import inject
+from abc import ABC
 
-from ..repository.ticket_repository import TicketRepository
-
-class TicketService():
-
-    @inject
-    def __init__(self, dao: TicketRepository) -> None:
-        self._dao = dao
+class TicketService(ABC):
+    pass
