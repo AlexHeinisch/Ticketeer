@@ -3,3 +3,5 @@ __pycache__
 .venv/
 docker-compose.override.yml
 instance/
+*.db
+migrations/
