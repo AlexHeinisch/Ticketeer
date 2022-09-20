@@ -1,9 +1,9 @@
 from injector import inject
 
-from ..persistence.base_daos import TicketDao
+from ..repository.ticket_repository import TicketRepository
 
 class TicketService():
 
     @inject
-    def __init__(self, dao: TicketDao) -> None:
+    def __init__(self, dao: TicketRepository) -> None:
         self._dao = dao

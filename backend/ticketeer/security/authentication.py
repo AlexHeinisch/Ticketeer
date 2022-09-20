@@ -8,8 +8,8 @@ from ..error.custom_errors import AuthorizationError
 
 from ..service.user_service import UserService
 
-from ..schemas import LoginRequestSchema
-from ..models import LoginRequest
+from ..dto.schemas import LoginRequestSchema
+from ..dto.models import LoginRequest
 
 authentication = Blueprint('authentication', __name__)
 

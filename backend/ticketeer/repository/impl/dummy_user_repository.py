@@ -1,16 +1,8 @@
-from ..base_daos import TicketDao, UserDao
+from ..user_repository import UserRepository
 
-from ...models import User, UserUpdateRequest
+from ...dto.models import User, UserUpdateRequest
 
-class DummyTicketDao(TicketDao):
-
-    def __init__(self) -> None:
-        super().__init__()
-
-    def get(self):
-        pass
-
-class DummyUserDao(UserDao):
+class DummyUserRepository(UserRepository):
 
     def __init__(self) -> None:
         super().__init__()
@@ -32,7 +24,7 @@ class DummyUserDao(UserDao):
     # not tested
     def get_users_by_search_req(self, req) -> list[User]:
         res = []
-        for k,v in self._storage.items():
+        for _,v in self._storage.items():
             if req.email and not req.email in v.email:
                 continue
             if req.username and not req.username in v.username:

@@ -6,8 +6,8 @@ from injector import inject
 from ..service.user_service import UserService
 
 # Validation
-from ..schemas import UserSchema, UserSearchRequestSchema, UserUpdateRequestSchema
-from ..models import User, UserRole, UserSearchRequest, UserUpdateRequest
+from ..dto.schemas import UserSchema, UserSearchRequestSchema, UserUpdateRequestSchema
+from ..dto.models import User, UserRole, UserSearchRequest, UserUpdateRequest
 
 # Auth
 from ..security.authorization import jwt_required

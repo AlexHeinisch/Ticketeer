@@ -4,8 +4,13 @@ import json
 
 # Flask Injector
 import injector
-from .dependencies import configure
 from flask_injector import FlaskInjector
+
+# Extensions
+from .extensions import db, custom_injector
+
+# Dependency Injection config
+from .dependencies import configure
 
 # Blueprints
 from .endpoint.ticket_endpoint import ticket
@@ -15,7 +20,6 @@ from .security.authentication import authentication
 
 from .error.error_handlers import error_handlers
 
-custom_injector = injector.Injector()
 
 def create_app(test_config=None, injector_module=None) -> Flask:
 
@@ -31,11 +35,11 @@ def create_app(test_config=None, injector_module=None) -> Flask:
     else:
         app.config.from_mapping(test_config)
 
+    db.init_app(app)
+
     app.register_blueprint(ticket, url_prefix='/ticket')
     app.register_blueprint(user, url_prefix='/user')
-
     app.register_blueprint(authentication, url_prefix='/auth')
-
     app.register_blueprint(error_handlers)
 
     modules = [configure]
