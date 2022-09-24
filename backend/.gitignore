@@ -3,6 +3,7 @@ __pycache__
 .venv/
 .env
 docker-compose.override.yml
+*.egg-info
 instance/
 *.db
 migrations/
