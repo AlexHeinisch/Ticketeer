@@ -4,20 +4,20 @@ import jwt
 
 from injector import inject
 
-from ..error.custom_errors import AuthorizationError
+from ticketeer.error.custom_errors import AuthorizationError
 
-from ..service.user_service import UserService
+from ticketeer.service.user_service import UserService
 
-from ..dto.schemas import LoginRequestSchema
-from ..dto.models import LoginRequest
+from ticketeer.dto.schemas import LoginRequestSchema
+from ticketeer.dto.dtos import LoginRequestDto
 
 authentication = Blueprint('authentication', __name__)
 
 @inject
 @authentication.route('/login', methods=['GET', 'POST'])
 def login(service: UserService):
-    obj: LoginRequest = LoginRequestSchema().load(request.get_json())
-    user = service.get_single_user(obj.username)
+    obj: LoginRequestDto = LoginRequestSchema().load(request.get_json()) # type: ignore
+    user = service.get_user_by_id(obj.username)
     if user and service.verify_login(obj):
         token = generate_token(user.username, user.role, current_app.config['SECRET'])
         return {'token' : token}

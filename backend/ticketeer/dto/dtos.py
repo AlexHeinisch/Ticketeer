@@ -18,14 +18,14 @@ class UserRole(str, Enum):
 ### AUTH ###
 
 @dataclass
-class LoginRequest():
+class LoginRequestDto():
     username: str
     password: str
 
 ### TAGS ###
 
 @dataclass
-class Tag():
+class TagDto():
     id: int
     name: str
     font_color: Optional[str]
@@ -35,7 +35,7 @@ class Tag():
 ### USER ###
 
 @dataclass
-class User():
+class UserDto():
     username: str
     password: str
     email: str
@@ -55,7 +55,7 @@ class User():
         }
     
     def copy(self):
-        return User(
+        return UserDto(
             self.username,
             self.password,
             self.email,
@@ -68,7 +68,7 @@ class User():
             self.role = UserRole[self.role.upper()]
 
 @dataclass
-class UserSearchRequest():
+class UserSearchRequestDto():
     username: str
     email: str
     role: UserRole
@@ -76,7 +76,7 @@ class UserSearchRequest():
     offset: int = 0
 
 @dataclass
-class UserUpdateRequest():
+class UserUpdateRequestDto():
     username: str
     email: str
     old_password: str
@@ -87,7 +87,7 @@ class UserUpdateRequest():
 ### TICKET ###
 
 @dataclass
-class Ticket():
+class TicketDto():
     id: int
     name: str
     description: str
@@ -124,7 +124,7 @@ class Ticket():
         }
     
     def copy(self):
-        return Ticket(
+        return TicketDto(
             self.id,
             self.name,
             self.description,
@@ -142,7 +142,7 @@ class Ticket():
             self.status = Status[self.status.upper()]
 
 @dataclass
-class TicketSearchRequest():
+class TicketSearchRequestDto():
     name: str
     description: str
     assigned_to: str
@@ -157,7 +157,7 @@ class TicketSearchRequest():
     offset: int = 0
 
 @dataclass
-class TicketUpdateRequest():
+class TicketUpdateRequestDto():
     name: str
     description: str
     assigned_to: str

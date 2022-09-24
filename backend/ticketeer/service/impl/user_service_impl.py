@@ -2,14 +2,14 @@ import logging
 from injector import inject
 from flask import g
 
-from ...error.custom_errors import ConflictError, NotFoundError, PermissionError
+from ticketeer.error.custom_errors import ConflictError, NotFoundError, PermissionError
 
-from ...repository.user_repository import UserRepository
+from ticketeer.repository.user_repository import UserRepository
 
-from ...dto.models import User, UserRole, LoginRequest, UserSearchRequest, UserUpdateRequest
+from ticketeer.dto.dtos import UserDto, UserRole, LoginRequestDto, UserSearchRequestDto, UserUpdateRequestDto
 
 from werkzeug.security import generate_password_hash, check_password_hash
-from ..user_service import UserService
+from ticketeer.service.user_service import UserService
 
 class UserServiceImpl(UserService):
 
@@ -19,7 +19,7 @@ class UserServiceImpl(UserService):
         self._logger = logging.getLogger(__name__)
 
 
-    def verify_login(self, req: LoginRequest) -> bool:
+    def verify_login(self, req: LoginRequestDto) -> bool:
         usr = self._repository.get_user_by_name(req.username)
         if usr:
             return check_password_hash(usr.password, req.password)
@@ -27,22 +27,20 @@ class UserServiceImpl(UserService):
         return False
 
 
-    def get_single_user(self, name: str) -> User:
-        user = self._repository.get_user_by_name(name)
-
-        if not user:
-            raise NotFoundError('given user does not exist')
-
-        return user
+    def get_user_by_name(self, name: str) -> UserDto:
+        return self._repository.get_user_by_name(name)
 
 
-    def get_multiple_users(self, req: UserSearchRequest) -> list[User]:
+    def get_multiple_users(self, req: UserSearchRequestDto) -> list[UserDto]:
         return self._repository.get_users_by_search_req(req)
 
 
-    def register_user(self, usr: User) -> User:
-        if self._repository.get_user_by_name(usr.username):
+    def register_user(self, usr: UserDto) -> UserDto:
+        try: 
+            self._repository.get_user_by_name(usr.username)
             raise ConflictError('username already in use')
+        except NotFoundError:
+            ...
 
         #if not self._icon_service.icon_exists(usr.icon_id):
         #    raise ConflictError(f'icon with id {usr.icon_id} does not exist!')
@@ -62,7 +60,7 @@ class UserServiceImpl(UserService):
 
         self._repository.delete_user_by_name(name)
 
-    def update_user(self, req: UserUpdateRequest) -> User:
+    def update_user(self, req: UserUpdateRequestDto) -> UserDto:
         if (not req.username == g.user) and g.role is not UserRole.ADMIN:
             raise PermissionError('forbidden')
 
@@ -74,7 +72,7 @@ class UserServiceImpl(UserService):
             raise PermissionError('forbidden')
         if req.new_password and not req.old_password:
             raise ConflictError('old_password needs to be provided to set the new one')
-        if req.new_password and not self.verify_login(LoginRequest(req.username, req.old_password)):
+        if req.new_password and not self.verify_login(LoginRequestDto(req.username, req.old_password)):
             raise PermissionError('could not authenticate')
         if req.new_password:
             req.new_password = generate_password_hash(req.new_password)

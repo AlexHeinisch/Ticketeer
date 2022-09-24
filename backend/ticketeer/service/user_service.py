@@ -1,22 +1,22 @@
-from ..dto.models import User, LoginRequest, UserSearchRequest, UserUpdateRequest
+from ticketeer.dto.dtos import UserDto, LoginRequestDto, UserSearchRequestDto, UserUpdateRequestDto
 from abc import ABC, abstractmethod
 
 class UserService(ABC):
 
     @abstractmethod
-    def verify_login(self, req: LoginRequest) -> bool:
+    def verify_login(self, req: LoginRequestDto) -> bool:
         pass
 
     @abstractmethod
-    def get_single_user(self, name: str) -> User:
+    def get_user_by_name(self, name: str) -> UserDto:
         pass
 
     @abstractmethod
-    def get_multiple_users(self, req: UserSearchRequest) -> list[User]:
+    def get_multiple_users(self, req: UserSearchRequestDto) -> list[UserDto]:
         pass
 
     @abstractmethod
-    def register_user(self, usr: User) -> User:
+    def register_user(self, usr_dto: UserDto) -> UserDto:
         pass
 
     @abstractmethod
@@ -24,5 +24,5 @@ class UserService(ABC):
         pass
 
     @abstractmethod
-    def update_user(self, req: UserUpdateRequest) -> User:
+    def update_user(self, req: UserUpdateRequestDto) -> UserDto:
         pass

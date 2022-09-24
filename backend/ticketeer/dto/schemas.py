@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields, pre_dump, validate, RAISE, post_load
 from marshmallow_enum import EnumField
-from .models import Status, Ticket, TicketSearchRequest, TicketUpdateRequest, UserRole, User, LoginRequest, UserSearchRequest, UserUpdateRequest
+from ticketeer.dto.dtos import *
 
 ### AUTH ###
 
@@ -15,7 +15,7 @@ class LoginRequestSchema(Schema):
     )
     @post_load
     def make(self, data, **kwargs):
-        return LoginRequest(**data)
+        return LoginRequestDto(**data)
 
     class Meta:
         unknown = RAISE
@@ -73,7 +73,7 @@ class UserSchema(Schema):
 
     @post_load
     def make(self, data, **kwargs):
-        return User(**data)
+        return UserDto(**data)
 
     class Meta:
         unknown = RAISE
@@ -103,14 +103,14 @@ class UserSearchRequestSchema(Schema):
     )
 
     @post_load
-    def make(self, data, **kwargs) -> UserSearchRequest:
+    def make(self, data, **kwargs) -> UserSearchRequestDto:
         if 'username' not in data:
             data['username'] = None
         if 'email' not in data:
             data['email'] = None
         if 'role' not in data:
             data['role'] = None
-        return UserSearchRequest(**data)
+        return UserSearchRequestDto(**data)
 
     class Meta:
         unknown = RAISE
@@ -157,7 +157,7 @@ class UserUpdateRequestSchema(Schema):
             data['icon_id'] = None
         if 'role' not in data:
             data['role'] = None
-        return UserUpdateRequest(**data)
+        return UserUpdateRequestDto(**data)
 
     class Meta:
         ordered = True
@@ -214,7 +214,7 @@ class TicketSchema(Schema):
     def make(self, data, **kwargs):
         if 'id' not in data:
             data['id'] = None
-        return Ticket(**data)
+        return TicketDto(**data)
 
     class Meta:
         unknown = RAISE
@@ -293,7 +293,7 @@ class TicketSearchRequestSchema(Schema):
             data['tags'] = None
         if 'status' not in data:
             data['status'] = None
-        return TicketSearchRequest(**data)
+        return TicketSearchRequestDto(**data)
 
     class Meta:
         ordered = True
@@ -341,7 +341,7 @@ class TicketUpdateRequestSchema(Schema):
             data['tags'] = None
         if 'status' not in data:
             data['status'] = None
-        return TicketUpdateRequest(**data)
+        return TicketUpdateRequestDto(**data)
 
     class Meta:
         ordered = True

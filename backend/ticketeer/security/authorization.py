@@ -1,8 +1,8 @@
 from functools import wraps
 from flask import request, g, current_app
 from jwt import DecodeError, decode
-from ..error.custom_errors import AuthorizationError, PermissionError
-from ..dto.models import UserRole
+from ticketeer.error.custom_errors import AuthorizationError, PermissionError
+from ticketeer.dto.dtos import UserRole
 
 
 def jwt_required(allowed_roles = []):

@@ -1,14 +1,14 @@
-from .service.ticket_service import TicketService
-from .service.impl.ticket_service_impl import TicketServiceImpl
-from .service.user_service import UserService
-from .service.impl.user_service_impl import UserServiceImpl
+from ticketeer.service.ticket_service import TicketService
+from ticketeer.service.impl.ticket_service_impl import TicketServiceImpl
+from ticketeer.service.user_service import UserService
+from ticketeer.service.impl.user_service_impl import UserServiceImpl
 
-from .repository.user_repository import UserRepository
-from .repository.impl.sqlalchemy_user_repository import SQLAlchemyUserRepository
+from ticketeer.repository.user_repository import UserRepository
+from ticketeer.repository.impl.sqlalchemy_user_repository import SQLAlchemyUserRepository
 
 from flask_sqlalchemy import SQLAlchemy
 
-from .import db
+from ticketeer import db
 from injector import Binder, singleton
 
 def configure(binder: Binder):

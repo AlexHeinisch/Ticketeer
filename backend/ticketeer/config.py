@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 basedir = path.dirname(path.dirname(path.abspath(__file__)))
 load_dotenv(path.join(basedir, '.env'))
 
-def load_config(mode=environ.get('MODE')):
+def load_config(mode=environ.get('ENV')):
     """Load config."""
     try:
         if mode == 'PRODUCTION':
