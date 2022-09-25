@@ -36,6 +36,7 @@ class TagDto():
 
 @dataclass
 class UserDto():
+    id: int
     username: str
     password: str
     email: str
@@ -43,10 +44,11 @@ class UserDto():
     role: UserRole = UserRole.USER
 
     def to_sql_format(self):
-        return f"('{self.username}', '{self.password}', '{self.email}', {self.icon_id}, '{self.role.name}')"
+        return f"({id}, '{self.username}', '{self.password}', '{self.email}', {self.icon_id}, '{self.role.name}')"
 
     def to_dict(self):
         return {
+            'id': self.id,
             'username': self.username,
             'password': self.password,
             'email': self.email,
@@ -56,6 +58,7 @@ class UserDto():
     
     def copy(self):
         return UserDto(
+            self.id,
             self.username,
             self.password,
             self.email,

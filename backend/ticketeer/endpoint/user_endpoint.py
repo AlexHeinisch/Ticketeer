@@ -17,11 +17,11 @@ logger = logging.getLogger(__name__)
 
 
 @inject
-@user.route('/<name>', methods=['GET'])
+@user.route('/<id>', methods=['GET'])
 #@jwt_required()
-def get_user_by_name(service: UserService, name: str):
-    logger.info(f'[GET] single user: name={name}')
-    return UserSchema().dump(service.get_user_by_name(name))
+def get_user_by_id(service: UserService, id: int):
+    logger.info(f'[GET] single user: id={id}')
+    return UserSchema().dump(service.get_user_by_id(id))
 
 @inject
 @user.route('', methods=['GET'])

@@ -1,4 +1,5 @@
 import logging
+from typing import NoReturn
 from injector import inject
 from flask import g
 
@@ -26,10 +27,19 @@ class UserServiceImpl(UserService):
 
         return False
 
+    def get_user_by_id(self, id: int) -> UserDto:
+        usr = self._repository.get_user_by_id(id)
+        if usr:
+            return usr
+        else:
+            raise NotFoundError(f'Could not find user with id \'{id}\'')
 
     def get_user_by_name(self, name: str) -> UserDto:
-        return self._repository.get_user_by_name(name)
-
+        usr = self._repository.get_user_by_name(name)
+        if usr:
+            return usr
+        else:
+            raise NotFoundError(f'Could not find user with name \'{name}\'')
 
     def get_multiple_users(self, req: UserSearchRequestDto) -> list[UserDto]:
         return self._repository.get_users_by_search_req(req)
@@ -51,7 +61,7 @@ class UserServiceImpl(UserService):
         return self._repository.insert_user(usr)
 
 
-    def delete_user_by_name(self, name: str) -> None:
+    def delete_user_by_name(self, name: str) -> NoReturn:
         if (not name == g.user) and g.role is not UserRole.ADMIN:
             raise PermissionError('forbidden')
 
