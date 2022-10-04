@@ -11,8 +11,9 @@ class User(db.Model): # type: ignore
     password_hash = db.Column('password_hash', db.String(255))
     email = db.Column('email', db.String(255))
 
-    def __init__(self, username, password_hash, email) -> None:
+    def __init__(self, username, password_hash, email, id=-1) -> None:
         super().__init__()
+        self.id = id
         self.username = username
         self.email = email
         self.password_hash = password_hash

@@ -1,14 +1,20 @@
-from ....ticketeer.repository.impl.sqlalchemy_user_repository import SQLAlchemyUserRepository
-from flask_sqlalchemy import SQLAlchemy
-from ....ticketeer.dto.models import User
-from unittest.mock import Mock
+from ticketeer.models import User
+from ticketeer.repository.impl.sqlalchemy_user_repository import SQLAlchemyUserRepository
 
-import flask_sqlalchemy
+def test_get_user_by_name(
+    sample_user: User,
+    user_repo: SQLAlchemyUserRepository,
+    mock_sqlalchemy
+    ):
+    mock_sqlalchemy.session.execute.return_value.one.return_value = sample_user
+    assert sample_user.to_dto() == user_repo.get_user_by_name(sample_user.username)
+    mock_sqlalchemy.select.return_value.filter_by.assert_called_once_with(username=sample_user.username)
 
-def test_x(sample_user: User, user_repo: SQLAlchemyUserRepository, mocker):
-    mock_get = mocker.patch('ticketeer.repository.impl.sqlalchemy_user_repository._db.session.query.get', return_value = sample_user)
-    mock_delete = mocker.patch('flask_sqlalchemy.SQLAlchemy.session.delete', return_value=None)
-    mock_commit = mocker.patch('flask_sqlalchemy.SQLAlchemy.session.commit', return_value=None)
-    user_repo.delete_user_by_name('Bob')
-
-    mock_get.assert_called()
+def test_get_user_by_id(
+    sample_user: User,
+    user_repo: SQLAlchemyUserRepository,
+    mock_sqlalchemy
+    ):
+    mock_sqlalchemy.session.execute.return_value.one.return_value = sample_user
+    assert sample_user.to_dto() == user_repo.get_user_by_id(sample_user.id)
+    mock_sqlalchemy.select.return_value.filter_by.assert_called_once_with(id=sample_user.id)

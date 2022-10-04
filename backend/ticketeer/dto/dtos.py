@@ -22,6 +22,16 @@ class LoginRequestDto():
     username: str
     password: str
 
+class CurrentPermissions():
+    user_id: int
+    user_name: str
+    user_role: UserRole 
+
+    def __init__(self, id: int, user_name: str, user_role: UserRole) -> None:
+        self.user_id = id
+        self.user_name = user_name
+        self.user_role = user_role
+
 ### TAGS ###
 
 @dataclass
