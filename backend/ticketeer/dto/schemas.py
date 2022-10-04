@@ -79,7 +79,7 @@ class UserSchema(Schema):
         unknown = RAISE
         ordered = True
 
-class UserRegsiterRequestSchema(Schema):
+class UserRegisterRequestSchema(Schema):
     username = fields.Str(
         validate=validate.Length(min=1, max=20),
         required=True
@@ -135,6 +135,9 @@ class UserSearchRequestSchema(Schema):
         ordered = True
 
 class UserUpdateRequestSchema(Schema):
+    id = fields.Int(
+        required=True
+    )
     username = fields.Str(
         validate=validate.Length(min=1,max=20),
         required=False

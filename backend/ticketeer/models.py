@@ -26,11 +26,14 @@ class User(db.Model): # type: ignore
             return False
         return __o.id == self.id and __o.username == self.username and __o.password_hash == self.password_hash and __o.email == self.email and __o.role == self.role
 
+    def __repr__(self) -> str:
+        return f'User(id={self.id}, username="{self.username}", email="{self.email}", password_hash="{self.password_hash}", role={self.role})'
+
     def to_dto(self) -> UserDto:
         return UserDto(
             id=self.id,
             username=self.username,
-            password='',
+            password_hash=self.password_hash,
             email = self.email,
             role = self.role
         )

@@ -56,4 +56,12 @@ class SQLAlchemyUserRepository(UserRepository):
 
     def update_user(self, req: UserUpdateRequestDto) -> UserDto:
         self._logger.error(f'[persistence] update_user: req={req}')
-        return UserDto(id=0, username='bob', password='Bob', email='bob')
+        usr = self._db.session.execute(self._db.select(User).filter_by(id=id)).one()
+        if req.username:
+            usr.username = req.username
+        if req.new_password:
+            usr.password_hash = req.new_password
+        if req.email:
+            usr.email = req.email
+        self._db.session.commit()
+        return usr.to_dto()

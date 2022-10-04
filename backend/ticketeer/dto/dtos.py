@@ -49,19 +49,19 @@ class TagDto():
 class UserDto():
     id: int
     username: str
-    password: str
+    password_hash: str
     email: str
     icon_id: int = -1
     role: UserRole = UserRole.USER
 
     def to_sql_format(self):
-        return f"({id}, '{self.username}', '{self.password}', '{self.email}', {self.icon_id}, '{self.role.name}')"
+        return f"({id}, '{self.username}', '{self.password_hash}', '{self.email}', {self.icon_id}, '{self.role.name}')"
 
     def to_dict(self):
         return {
             'id': self.id,
             'username': self.username,
-            'password': self.password,
+            'password': self.password_hash,
             'email': self.email,
             'icon_id': self.icon_id,
             'role': self.role.name
@@ -71,7 +71,7 @@ class UserDto():
         return UserDto(
             self.id,
             self.username,
-            self.password,
+            self.password_hash,
             self.email,
             self.icon_id,
             self.role
@@ -97,12 +97,13 @@ class UserSearchRequestDto():
 
 @dataclass
 class UserUpdateRequestDto():
-    username: str
-    email: str
-    old_password: str
-    new_password: str
-    icon_id: int
-    role: UserRole
+    id: int
+    username: Optional[str] = None
+    email: Optional[str] = None
+    old_password: Optional[str] = None
+    new_password: Optional[str] = None
+    icon_id: Optional[int] = None
+    role: Optional[UserRole] = None
 
 ### TICKET ###
 
