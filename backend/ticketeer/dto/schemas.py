@@ -79,6 +79,24 @@ class UserSchema(Schema):
         unknown = RAISE
         ordered = True
 
+class UserRegsiterRequestSchema(Schema):
+    username = fields.Str(
+        validate=validate.Length(min=1, max=20),
+        required=True
+    )
+    password = fields.Str(
+        validate=validate.Length(min=1, max=255),
+        required=True
+    )
+    email = fields.Email(
+        validate=validate.Length(min=1, max=40),
+        required=True
+    )
+
+    @post_load
+    def make(self, data, **kwargs):
+        return UserRegisterRequestDto(**data)
+
 class UserSearchRequestSchema(Schema):
     username = fields.Str(
         validate=validate.Length(min=1,max=20),

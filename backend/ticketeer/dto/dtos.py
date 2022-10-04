@@ -13,7 +13,8 @@ class Status(str, Enum):
 
 class UserRole(str, Enum):
     USER = 1
-    ADMIN = 2
+    MODERATOR = 2
+    ADMIN = 3
 
 ### AUTH ###
 
@@ -79,6 +80,12 @@ class UserDto():
     def __post_init__(self):
         if self.role and type(self.role) is str:
             self.role = UserRole[self.role.upper()]
+
+@dataclass
+class UserRegisterRequestDto():
+    username: str
+    password: str
+    email: str
 
 @dataclass
 class UserSearchRequestDto():
