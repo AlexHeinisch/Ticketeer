@@ -63,5 +63,7 @@ class SQLAlchemyUserRepository(UserRepository):
             usr.password_hash = req.new_password
         if req.email:
             usr.email = req.email
+        if req.role:
+            usr.role = req.role
         self._db.session.commit()
         return usr.to_dto()
