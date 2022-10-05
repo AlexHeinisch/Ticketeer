@@ -1,4 +1,3 @@
-from typing import NoReturn
 from ticketeer.dto.dtos import UserDto, LoginRequestDto, UserSearchRequestDto, UserUpdateRequestDto
 from abc import ABC, abstractmethod
 
@@ -25,7 +24,11 @@ class UserService(ABC):
         ...
 
     @abstractmethod
-    def delete_user_by_name(self, name: str) -> NoReturn:
+    def delete_user_by_name(self, name: str) -> None:
+        ...
+
+    @abstractmethod
+    def delete_user_by_id(self, id: int) -> None:
         ...
 
     @abstractmethod
