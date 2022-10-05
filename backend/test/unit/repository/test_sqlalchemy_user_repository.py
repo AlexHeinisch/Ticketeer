@@ -42,7 +42,7 @@ def test_delete_user_by_name(
     user_repo.delete_user_by_name(sample_user.username)
 
     mock_sqlalchemy.select.return_value.filter_by.assert_called_once_with(username=sample_user.username)
-    mock_sqlalchemy.session.delete.assert_called_once_with((sample_user,))
+    mock_sqlalchemy.session.delete.assert_called_once_with(sample_user)
     mock_sqlalchemy.session.commit.assert_called_once()
 
 
@@ -55,7 +55,7 @@ def test_delete_user_by_id(
     user_repo.delete_user_by_id(sample_user.id)
 
     mock_sqlalchemy.select.return_value.filter_by.assert_called_once_with(id=sample_user.id)
-    mock_sqlalchemy.session.delete.assert_called_once_with((sample_user,))
+    mock_sqlalchemy.session.delete.assert_called_once_with(sample_user)
     mock_sqlalchemy.session.commit.assert_called_once()
 
 def test_update_user_name(
