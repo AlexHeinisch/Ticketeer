@@ -89,9 +89,9 @@ class UserRegisterRequestDto():
 
 @dataclass
 class UserSearchRequestDto():
-    username: str
-    email: str
-    role: UserRole
+    username: Optional[str] = None
+    email: Optional[str] = None
+    role: Optional[UserRole] = None
     num: int = 100
     offset: int = 0
 

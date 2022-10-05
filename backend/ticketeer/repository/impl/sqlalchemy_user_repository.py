@@ -33,7 +33,19 @@ class SQLAlchemyUserRepository(UserRepository):
     
     def get_users_by_search_req(self, req: UserSearchRequestDto) -> list[UserDto]:
         self._logger.error(f'[persistence] get_users_by_search_req: req={req}')
-        return []
+        query = self._db.select(User)
+        if req.email:
+            query = query.filter(User.email.like(req.email))
+        if req.username:
+            query = query.filter(User.username.like(req.username))
+        if req.role:
+            query = query.filter(User.role == req.role)
+        query = query.limit(req.num).offset(req.offset)
+        try:
+            usrs = self._db.session.execute(query).all()
+            return [u.to_dto() for u in usrs]
+        except sqlalchemy.exc.NoResultFound:
+            return []
 
     def insert_user(self, dto: UserRegisterRequestDto) -> UserDto:
         self._logger.debug(f'[persistence] insert_user: dto={dto}')

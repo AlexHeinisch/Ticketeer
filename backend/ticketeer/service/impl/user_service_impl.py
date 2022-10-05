@@ -23,7 +23,7 @@ class UserServiceImpl(UserService):
     def verify_login(self, req: LoginRequestDto) -> bool:
         usr = self._repository.get_user_by_name(req.username)
         if usr:
-            return check_password_hash(usr.password, req.password)
+            return check_password_hash(usr.password_hash, req.password)
 
         return False
 
@@ -55,7 +55,7 @@ class UserServiceImpl(UserService):
         #if not self._icon_service.icon_exists(usr.icon_id):
         #    raise ConflictError(f'icon with id {usr.icon_id} does not exist!')
 
-        usr.password = generate_password_hash(usr.password)
+        usr.password_hash = generate_password_hash(usr.password_hash)
         usr.role = UserRole.USER
 
         return self._repository.insert_user(usr)
