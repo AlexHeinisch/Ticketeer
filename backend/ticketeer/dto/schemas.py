@@ -14,7 +14,7 @@ class LoginRequestSchema(Schema):
         required=True
     )
     @post_load
-    def make(self, data, **kwargs):
+    def make(self, data, **kwargs) -> LoginRequestDto:
         return LoginRequestDto(**data)
 
     class Meta:
@@ -48,31 +48,14 @@ class TagSchema(Schema):
 ### USER ###
 
 class UserSchema(Schema):
-    username = fields.Str(
-        validate=validate.Length(min=1,max=20),
-        required=True
-    )
-    password = fields.Str(
-        validate=validate.Length(min=1, max=255),
-        required=True,
-        load_only=True
-    )
-    email = fields.Email(
-        validate=validate.Length(min=1, max=40),
-        required=True
-    )
-    icon_id = fields.Int(
-        validate=validate.Range(min=0),
-        required=False
-    )
-    role = EnumField(
-        UserRole,
-        required=False,
-        by_value=False
-    )
+    id = fields.Int()
+    username = fields.Str()
+    email = fields.Email()
+    icon_id = fields.Int()
+    role = EnumField(UserRole,by_value=False)
 
     @post_load
-    def make(self, data, **kwargs):
+    def make(self, data, **kwargs) -> UserDto:
         return UserDto(**data)
 
     class Meta:
@@ -94,7 +77,7 @@ class UserRegisterRequestSchema(Schema):
     )
 
     @post_load
-    def make(self, data, **kwargs):
+    def make(self, data, **kwargs) -> UserRegisterRequestDto:
         return UserRegisterRequestDto(**data)
 
 class UserSearchRequestSchema(Schema):
@@ -165,7 +148,7 @@ class UserUpdateRequestSchema(Schema):
     )
 
     @post_load
-    def make(self, data, **kwargs):
+    def make(self, data, **kwargs) -> UserUpdateRequestDto:
         if 'username' not in data:
             data['username'] = None
         if 'email' not in data:
@@ -232,7 +215,7 @@ class TicketSchema(Schema):
     )
 
     @post_load
-    def make(self, data, **kwargs):
+    def make(self, data, **kwargs) -> TicketDto:
         if 'id' not in data:
             data['id'] = None
         return TicketDto(**data)
@@ -293,7 +276,7 @@ class TicketSearchRequestSchema(Schema):
     )
 
     @post_load
-    def make(self, data, **kwargs):
+    def make(self, data, **kwargs) -> TicketSearchRequestDto:
         if 'name' not in data:
             data['name'] = None
         if 'description' not in data:
@@ -349,7 +332,7 @@ class TicketUpdateRequestSchema(Schema):
     )
 
     @post_load
-    def make(self, data, **kwargs):
+    def make(self, data, **kwargs) -> TicketUpdateRequestDto:
         if 'name' not in data:
             data['name'] = None
         if 'description' not in data:
