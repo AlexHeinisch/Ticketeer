@@ -1,4 +1,4 @@
-from ticketeer.dto.dtos import UserRegisterRequestDto, UserRole, UserUpdateRequestDto
+from ticketeer.dto.dtos import UserRegisterRequestDto, UserRole, UserSearchRequestDto, UserUpdateRequestDto
 from ticketeer.models import User
 from ticketeer.repository.impl.sqlalchemy_user_repository import SQLAlchemyUserRepository
 
@@ -113,3 +113,13 @@ def test_update_user_all(
     assert returned_usr == expected_user.to_dto()
     mock_sqlalchemy.session.commit.assert_called_once()
 
+def test_search_users(
+    sample_user: User,
+    user_repo: SQLAlchemyUserRepository,
+    mock_sqlalchemy
+    ):
+    mock_sqlalchemy.session.execute.return_value.all.return_value = [sample_user]
+    returned_usrs = user_repo.get_users_by_search_req(UserSearchRequestDto(username=sample_user.username[:4]))
+    assert len(returned_usrs) == 1
+    assert sample_user.to_dto() in returned_usrs
+    mock_sqlalchemy.select().filter.assert_called_once()
