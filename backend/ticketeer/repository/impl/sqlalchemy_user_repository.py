@@ -35,9 +35,9 @@ class SQLAlchemyUserRepository(UserRepository):
         self._logger.error(f'[persistence] get_users_by_search_req: req={req}')
         query = self._db.select(User)
         if req.email:
-            query = query.filter(User.email.like(req.email))
+            query = query.filter(User.email.contains(req.email))
         if req.username:
-            query = query.filter(User.username.like(req.username))
+            query = query.filter(User.username.contains(req.username))
         if req.role:
             query = query.filter(User.role == req.role)
         query = query.limit(req.num).offset(req.offset)
@@ -50,6 +50,7 @@ class SQLAlchemyUserRepository(UserRepository):
     def insert_user(self, dto: UserRegisterRequestDto) -> UserDto:
         self._logger.debug(f'[persistence] insert_user: dto={dto}')
         usr: User = User(username=dto.username, password_hash=dto.password, email=dto.email)
+        usr.id = None
         self._db.session.add(usr)
         self._db.session.commit()
         return User.to_dto(usr)
