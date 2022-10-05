@@ -52,11 +52,8 @@ class UserServiceImpl(UserService):
 
 
     def register_user(self, req: UserRegisterRequestDto) -> UserDto:
-        try: 
-            self._repository.get_user_by_name(req.username)
+        if self._repository.get_user_by_name(req.username):
             raise ConflictError('username already in use')
-        except NotFoundError:
-            ...
 
         # replace password with hash to be stored in database
         req.password = generate_password_hash(req.password)
@@ -75,8 +72,8 @@ class UserServiceImpl(UserService):
 
 
     def delete_user_by_id(self, id: int) -> None:
-        if (not id == g.id) and g.role is not UserRole.ADMIN:
-            raise PermissionError('forbidden')
+        #if (not id == g.id) and g.role is not UserRole.ADMIN:
+        #    raise PermissionError('forbidden')
 
         if not self._repository.get_user_by_id(id):
             raise NotFoundError('given user does not exist')

@@ -1,4 +1,4 @@
-from ticketeer.dto.dtos import UserDto, LoginRequestDto, UserSearchRequestDto, UserUpdateRequestDto
+from ticketeer.dto.dtos import UserDto, LoginRequestDto, UserRegisterRequestDto, UserSearchRequestDto, UserUpdateRequestDto
 from abc import ABC, abstractmethod
 
 class UserService(ABC):
@@ -20,7 +20,7 @@ class UserService(ABC):
         ...
 
     @abstractmethod
-    def register_user(self, usr_dto: UserDto) -> UserDto:
+    def register_user(self, usr_dto: UserRegisterRequestDto) -> UserDto:
         ...
 
     @abstractmethod

@@ -1,4 +1,6 @@
 import logging
+from werkzeug.exceptions import BadRequest
+from typing import cast
 from flask import Blueprint, jsonify, request
 
 # DI
@@ -6,8 +8,8 @@ from injector import inject
 from ticketeer.service.user_service import UserService
 
 # Validation
-from ticketeer.dto.schemas import UserSchema, UserSearchRequestSchema, UserUpdateRequestSchema
-from ticketeer.dto.dtos import UserDto, UserUpdateRequestDto, UserSearchRequestDto
+from ticketeer.dto.schemas import UserRegisterRequestSchema, UserSchema, UserSearchRequestSchema, UserUpdateRequestSchema
+from ticketeer.dto.dtos import UserRegisterRequestDto, UserUpdateRequestDto, UserSearchRequestDto, UserSearchRequestDto
 
 # Auth
 from ..security.authorization import jwt_required
@@ -27,27 +29,33 @@ def get_user_by_id(service: UserService, id: int):
 @user.route('', methods=['GET'])
 #@jwt_required()
 def get_users_by_search(service: UserService):
-    req: UserSearchRequest = UserSearchRequestSchema().load(request.args) # type: ignore
+    req: UserSearchRequestDto = cast(UserSearchRequestDto, UserSearchRequestSchema().load(request.args))
     logger.info(f'[GET] users: search-req={req}')
     return jsonify(UserSchema(many=True).dump(service.get_multiple_users(req)))
 
 @inject
 @user.route('', methods=['POST'])
 def post_user(service: UserService):
-    usr: User = UserSchema().load(request.get_json()) # type: ignore
-    return UserSchema().dump(service.register_user(usr)), 201
+    body = request.get_json()
+    if not body:
+        raise BadRequest()
+    req: UserRegisterRequestDto = cast(UserRegisterRequestDto, UserRegisterRequestSchema().load(body))
+    return UserSchema().dump(service.register_user(req)), 201
 
 @inject
-@user.route('/<name>', methods=['DELETE'])
+@user.route('/<id>', methods=['DELETE'])
 #@jwt_required()
-def delete_user(service: UserService, name: str):
-    service.delete_user_by_name(name)
+def delete_user(service: UserService, id: int):
+    service.delete_user_by_id(id)
     return '', 204
 
 @inject
 @user.route('/<name>', methods=['PATCH'])
 #@jwt_required()
 def patch_user(service: UserService, name: str):
-    req : UserUpdateRequest = UserUpdateRequestSchema().load(request.get_json()) # type: ignore
+    body = request.get_json()
+    if not body:
+        raise BadRequest()
+    req : UserUpdateRequestDto = cast(UserUpdateRequestDto, UserUpdateRequestSchema().load(body))
     req.username = name
     return UserSchema().dump(service.update_user(req))
