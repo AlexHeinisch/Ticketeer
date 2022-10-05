@@ -8,7 +8,7 @@ def test_get_user_by_name(
     mock_sqlalchemy
     ):
     mock_sqlalchemy.session.execute.return_value.one.return_value = sample_user
-    assert sample_user.to_dto() == user_repo.get_user_by_name(sample_user.username)
+    assert User.to_dto(sample_user) == user_repo.get_user_by_name(sample_user.username)
     mock_sqlalchemy.select.return_value.filter_by.assert_called_once_with(username=sample_user.username)
 
 def test_get_user_by_id(
@@ -17,7 +17,7 @@ def test_get_user_by_id(
     mock_sqlalchemy
     ):
     mock_sqlalchemy.session.execute.return_value.one.return_value = sample_user
-    assert sample_user.to_dto() == user_repo.get_user_by_id(sample_user.id)
+    assert User.to_dto(sample_user) == user_repo.get_user_by_id(sample_user.id)
     mock_sqlalchemy.select.return_value.filter_by.assert_called_once_with(id=sample_user.id)
 
 def test_insert_user(
@@ -66,7 +66,7 @@ def test_update_user_name(
     expected_user = User(username='newusername', email=sample_user.email, password_hash=sample_user.password_hash, id=sample_user.id, role=sample_user.role)
     mock_sqlalchemy.session.execute.return_value.one.return_value = sample_user
     returned_usr = user_repo.update_user(UserUpdateRequestDto(sample_user.id, username=expected_user.username))
-    assert returned_usr == expected_user.to_dto()
+    assert returned_usr == User.to_dto(expected_user)
     mock_sqlalchemy.session.commit.assert_called_once()
     
 
@@ -78,7 +78,7 @@ def test_update_user_email(
     expected_user = User(username=sample_user.username, email='test@example.com', password_hash=sample_user.password_hash, id=sample_user.id, role=sample_user.role)
     mock_sqlalchemy.session.execute.return_value.one.return_value = sample_user
     returned_usr = user_repo.update_user(UserUpdateRequestDto(sample_user.id, email='test@example.com'))
-    assert returned_usr == expected_user.to_dto()
+    assert returned_usr == User.to_dto(expected_user)
     mock_sqlalchemy.session.commit.assert_called_once()
 
 def test_update_user_password(
@@ -89,7 +89,7 @@ def test_update_user_password(
     expected_user = User(username=sample_user.username, email=sample_user.email, password_hash='hash123', id=sample_user.id, role=sample_user.role)
     mock_sqlalchemy.session.execute.return_value.one.return_value = sample_user
     returned_usr = user_repo.update_user(UserUpdateRequestDto(sample_user.id, new_password='hash123'))
-    assert returned_usr == expected_user.to_dto()
+    assert returned_usr == User.to_dto(expected_user)
 
 def test_update_user_role(
     sample_user: User,
@@ -99,7 +99,7 @@ def test_update_user_role(
     expected_user = User(username=sample_user.username, email=sample_user.email, password_hash=sample_user.password_hash, id=sample_user.id, role=UserRole.ADMIN)
     mock_sqlalchemy.session.execute.return_value.one.return_value = sample_user
     returned_usr = user_repo.update_user(UserUpdateRequestDto(sample_user.id, role=UserRole.ADMIN))
-    assert returned_usr == expected_user.to_dto()
+    assert returned_usr == User.to_dto(expected_user)
     mock_sqlalchemy.session.commit.assert_called_once()
 
 def test_update_user_all(
@@ -110,7 +110,7 @@ def test_update_user_all(
     expected_user = User(username='user123', email='email@example.com', password_hash='hash123', id=sample_user.id, role=UserRole.ADMIN)
     mock_sqlalchemy.session.execute.return_value.one.return_value = sample_user
     returned_usr = user_repo.update_user(UserUpdateRequestDto(sample_user.id, username='user123', email='email@example.com', new_password='hash123', role=UserRole.ADMIN))
-    assert returned_usr == expected_user.to_dto()
+    assert returned_usr == User.to_dto(expected_user)
     mock_sqlalchemy.session.commit.assert_called_once()
 
 def test_search_users(
@@ -121,5 +121,5 @@ def test_search_users(
     mock_sqlalchemy.session.execute.return_value.all.return_value = [sample_user]
     returned_usrs = user_repo.get_users_by_search_req(UserSearchRequestDto(username=sample_user.username[:4]))
     assert len(returned_usrs) == 1
-    assert sample_user.to_dto() in returned_usrs
+    assert User.to_dto(sample_user) in returned_usrs
     mock_sqlalchemy.select().filter.assert_called_once()

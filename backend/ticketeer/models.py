@@ -29,12 +29,13 @@ class User(db.Model): # type: ignore
     def __repr__(self) -> str:
         return f'User(id={self.id}, username="{self.username}", email="{self.email}", password_hash="{self.password_hash}", role={self.role})'
 
-    def to_dto(self) -> UserDto:
+    @staticmethod
+    def to_dto(usr) -> UserDto:
         return UserDto(
-            id=self.id,
-            username=self.username,
-            password_hash=self.password_hash,
-            email = self.email,
-            role = self.role
+            id=usr.id,
+            username=usr.username,
+            password_hash=usr.password_hash,
+            email = usr.email,
+            role = usr.role
         )
 

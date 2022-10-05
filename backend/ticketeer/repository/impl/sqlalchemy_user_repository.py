@@ -19,7 +19,7 @@ class SQLAlchemyUserRepository(UserRepository):
         self._logger.debug(f'[persistence] get_user_by_id: id={id}')
         try:
             usr = self._db.session.execute(self._db.select(User).filter_by(id=id)).one()
-            return usr.to_dto()
+            return User.to_dto(usr)
         except sqlalchemy.exc.NoResultFound:
             return None
 
@@ -27,7 +27,7 @@ class SQLAlchemyUserRepository(UserRepository):
         self._logger.debug(f'[persistence] get_user_by_name: name={name}')
         try:
             usr = self._db.session.execute(self._db.select(User).filter_by(username=name)).one()
-            return usr.to_dto()
+            return User.to_dto(usr)
         except sqlalchemy.exc.NoResultFound:
             return None
     
@@ -43,7 +43,7 @@ class SQLAlchemyUserRepository(UserRepository):
         query = query.limit(req.num).offset(req.offset)
         try:
             usrs = self._db.session.execute(query).all()
-            return [u.to_dto() for u in usrs]
+            return [User.to_dto(u) for u in usrs]
         except sqlalchemy.exc.NoResultFound:
             return []
 
@@ -52,7 +52,7 @@ class SQLAlchemyUserRepository(UserRepository):
         usr: User = User(username=dto.username, password_hash=dto.password, email=dto.email)
         self._db.session.add(usr)
         self._db.session.commit()
-        return usr.to_dto()
+        return User.to_dto(usr)
 
     def delete_user_by_name(self, name: str) -> None:
         self._logger.debug(f'[persistence] delete_user_by_name: name={name}')
@@ -78,4 +78,4 @@ class SQLAlchemyUserRepository(UserRepository):
         if req.role:
             usr.role = req.role
         self._db.session.commit()
-        return usr.to_dto()
+        return User.to_dto(usr)
