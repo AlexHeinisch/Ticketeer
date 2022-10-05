@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-from ticketeer.dto.dtos import UserDto, UserSearchRequestDto, UserUpdateRequestDto
-from typing import NoReturn
+from ticketeer.dto.dtos import UserDto, UserRegisterRequestDto, UserSearchRequestDto, UserUpdateRequestDto
 
 class UserRepository(ABC):
 
@@ -24,7 +23,7 @@ class UserRepository(ABC):
         ...
 
     @abstractmethod
-    def insert_user(self, usr_dto: UserDto) -> UserDto:
+    def insert_user(self, usr_dto: UserRegisterRequestDto) -> UserDto:
         ...
 
     @abstractmethod
