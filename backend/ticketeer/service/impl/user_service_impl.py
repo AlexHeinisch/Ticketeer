@@ -1,7 +1,6 @@
 import logging
 from typing import NoReturn
 from injector import inject
-from flask import g
 
 from ticketeer.error.custom_errors import ConflictError, NotFoundError, PermissionError
 
@@ -10,6 +9,7 @@ from ticketeer.repository.user_repository import UserRepository
 from ticketeer.dto.dtos import UserDto, UserRegisterRequestDto, UserRole, LoginRequestDto, UserSearchRequestDto, UserUpdateRequestDto
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from ticketeer.security.authorization import CurrentPermissions
 from ticketeer.service.user_service import UserService
 
 class UserServiceImpl(UserService):
@@ -62,9 +62,6 @@ class UserServiceImpl(UserService):
 
 
     def delete_user_by_name(self, name: str) -> None:
-        if (not name == g.user) and g.role is not UserRole.ADMIN:
-            raise PermissionError('forbidden')
-
         if not self._repository.get_user_by_name(name):
             raise NotFoundError('given user does not exist')
 
@@ -72,24 +69,18 @@ class UserServiceImpl(UserService):
 
 
     def delete_user_by_id(self, id: int) -> None:
-        #if (not id == g.id) and g.role is not UserRole.ADMIN:
-        #    raise PermissionError('forbidden')
-
         if not self._repository.get_user_by_id(id):
             raise NotFoundError('given user does not exist')
 
         self._repository.delete_user_by_id(id)
 
 
-    def update_user(self, req: UserUpdateRequestDto) -> UserDto:
-        if (not req.username == g.user) and g.role is not UserRole.ADMIN:
-            raise PermissionError('forbidden')
-
+    def update_user(self, req: UserUpdateRequestDto, perm: CurrentPermissions) -> UserDto:
         if not self._repository.get_user_by_id(req.id):
             raise NotFoundError('given user does not exist')
         #if req.icon_id and not self._icon_service.icon_exists(req.icon_id):
         #    raise ConflictError(f'icon with id {req.icon_id} does not exist!')    
-        if req.role and g.role is not UserRole.ADMIN:
+        if req.role and perm.user_role is not UserRole.ADMIN:
             raise PermissionError('forbidden')
         if req.new_password and not req.old_password:
             raise ConflictError('old_password needs to be provided to set the new one')

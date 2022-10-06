@@ -1,6 +1,8 @@
 from ticketeer.dto.dtos import UserDto, LoginRequestDto, UserRegisterRequestDto, UserSearchRequestDto, UserUpdateRequestDto
 from abc import ABC, abstractmethod
 
+from ticketeer.security.authorization import CurrentPermissions
+
 class UserService(ABC):
 
     @abstractmethod
@@ -32,5 +34,5 @@ class UserService(ABC):
         ...
 
     @abstractmethod
-    def update_user(self, req: UserUpdateRequestDto) -> UserDto:
+    def update_user(self, req: UserUpdateRequestDto, perm: CurrentPermissions) -> UserDto:
         ...
