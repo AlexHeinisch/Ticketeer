@@ -28,7 +28,6 @@ def create_app(test_config=None, injector_module=None) -> Flask:
         app.config.from_object(load_config())
     else:
         app.config.from_mapping(test_config)
-    print(app.debug)
 
     CORS(app)
     db.init_app(app)
