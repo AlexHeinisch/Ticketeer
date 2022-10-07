@@ -28,7 +28,7 @@ def test_insert_user(
     user_repo.insert_user(UserRegisterRequestDto(username=sample_user.username,
                                                  password=sample_user.password_hash,
                                                  email=sample_user.email))
-    sample_user.id= -1
+    sample_user.id= None 
     sample_user.role = UserRole.USER
     mock_sqlalchemy.session.add.assert_called_once_with(sample_user)
     mock_sqlalchemy.session.commit.assert_called_once()
