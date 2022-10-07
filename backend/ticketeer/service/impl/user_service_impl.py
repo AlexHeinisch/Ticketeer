@@ -27,25 +27,19 @@ class UserServiceImpl(UserService):
 
         return False
 
-    def _verify_login_by_id(self, id, password):
-        usr = self._repository.get_user_by_id(id)
-        if usr:
-            return self.verify_login(LoginRequestDto(username=usr.username, password=password))
-        return False
-
     def get_user_by_id(self, id: int) -> UserDto:
         usr = self._repository.get_user_by_id(id)
         if usr:
             return usr
         else:
-            raise NotFoundError(f'Could not find user with id \'{id}\'')
+            raise NotFoundError(f'given user does not exist')
 
     def get_user_by_name(self, name: str) -> UserDto:
         usr = self._repository.get_user_by_name(name)
         if usr:
             return usr
         else:
-            raise NotFoundError(f'Could not find user with name \'{name}\'')
+            raise NotFoundError(f'given user does not exist')
 
     def get_multiple_users(self, req: UserSearchRequestDto) -> list[UserDto]:
         return self._repository.get_users_by_search_req(req)
@@ -76,7 +70,8 @@ class UserServiceImpl(UserService):
 
 
     def update_user(self, req: UserUpdateRequestDto, perm: CurrentPermissions) -> UserDto:
-        if not self._repository.get_user_by_id(req.id):
+        user = self._repository.get_user_by_id(req.id)
+        if not user:
             raise NotFoundError('given user does not exist')
         #if req.icon_id and not self._icon_service.icon_exists(req.icon_id):
         #    raise ConflictError(f'icon with id {req.icon_id} does not exist!')    
@@ -84,7 +79,9 @@ class UserServiceImpl(UserService):
             raise PermissionError('forbidden')
         if req.new_password and not req.old_password:
             raise ConflictError('old_password needs to be provided to set the new one')
-        if req.new_password and not self._verify_login_by_id(req.id,req.old_password):
+        if req.new_password and req.old_password and not self.verify_login(\
+                LoginRequestDto(user.username, req.old_password)
+            ):
             raise PermissionError('could not authenticate')
         if req.new_password:
             req.new_password = generate_password_hash(req.new_password)
