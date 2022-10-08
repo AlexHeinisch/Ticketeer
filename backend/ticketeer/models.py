@@ -39,3 +39,13 @@ class User(db.Model): # type: ignore
             role = usr.role
         )
 
+    @staticmethod
+    def create_copy(usr):
+        return User(
+            id=usr.id,
+            username=usr.username,
+            password_hash=usr.password_hash,
+            email = usr.email,
+            role = usr.role
+        )
+
