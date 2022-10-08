@@ -38,11 +38,3 @@ def sample_user2_token(sample_user2_base, test_settings):
 def sample_admin_token(sample_admin_base, test_settings):
     return generate_token(sample_admin_base.id, sample_admin_base.username, sample_admin_base.role, test_settings['SECRET_KEY'])
 
-@pytest.fixture(scope='function')
-def load_sample_users(sample_user, sample_user2, sample_admin, app):
-    with app.app_context():
-        db.session.add(sample_user)
-        db.session.add(sample_user2)
-        db.session.add(sample_admin)
-        db.session.commit()
-
