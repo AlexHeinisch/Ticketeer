@@ -119,7 +119,7 @@ class UserSearchRequestSchema(Schema):
 
 class UserUpdateRequestSchema(Schema):
     id = fields.Int(
-        required=True
+        required=False
     )
     username = fields.Str(
         validate=validate.Length(min=1,max=20),

@@ -69,7 +69,7 @@ class SQLAlchemyUserRepository(UserRepository):
 
     def update_user(self, req: UserUpdateRequestDto) -> UserDto:
         self._logger.error(f'[persistence] update_user: req={req}')
-        usr = self._db.session.execute(self._db.select(User).filter_by(id=id)).one()
+        usr = self._db.session.execute(self._db.select(User).filter_by(id=req.id)).one()
         usr = usr[0]
         if req.username:
             usr.username = req.username

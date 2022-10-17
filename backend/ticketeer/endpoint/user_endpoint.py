@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 @inject
-@user.route('/<id>', methods=['GET'])
+@user.route('/<int:id>', methods=['GET'])
 @jwt_required()
 def get_user_by_id(service: UserService, id: int):
     logger.info(f'[GET] single user: id={id}')
@@ -43,14 +43,14 @@ def post_user(service: UserService):
     return UserSchema().dump(service.register_user(req)), 201
 
 @inject
-@user.route('/<id>', methods=['DELETE'])
+@user.route('/<int:id>', methods=['DELETE'])
 @jwt_required(UserRole.ADMIN, "BEARER[id] == <id>")
 def delete_user(service: UserService, id: int, perm: NoInject[CurrentPermissions]):
     service.delete_user_by_id(id)
     return '', 204
 
 @inject
-@user.route('/<id>', methods=['PATCH'])
+@user.route('/<int:id>', methods=['PATCH'])
 @jwt_required(UserRole.ADMIN, "BEARER[id] == <id>")
 def patch_user(service: UserService, id: int, perm: NoInject[CurrentPermissions]):
     body = request.get_json()

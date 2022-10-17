@@ -88,7 +88,7 @@ class UserSearchRequestDto():
 
 @dataclass
 class UserUpdateRequestDto():
-    id: int
+    id: int = -1
     username: Optional[str] = None
     email: Optional[str] = None
     old_password: Optional[str] = None

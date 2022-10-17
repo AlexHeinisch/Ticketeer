@@ -70,14 +70,16 @@ class UserServiceImpl(UserService):
 
 
     def update_user(self, req: UserUpdateRequestDto, perm: CurrentPermissions) -> UserDto:
+        if not req.id:
+            raise ConflictError('id needs to be provided')
         user = self._repository.get_user_by_id(req.id)
         if not user:
             raise NotFoundError('given user does not exist')
         #if req.icon_id and not self._icon_service.icon_exists(req.icon_id):
         #    raise ConflictError(f'icon with id {req.icon_id} does not exist!')    
-        if req.role and perm.user_role is not UserRole.ADMIN:
+        if req.role and perm.user_role != UserRole.ADMIN.name:
             raise PermissionError('forbidden')
-        if req.new_password and not req.old_password:
+        if (req.new_password and not req.old_password) and (req.id == perm.user_id):
             raise ConflictError('old_password needs to be provided to set the new one')
         if req.new_password and req.old_password and not self.verify_login(\
                 LoginRequestDto(user.username, req.old_password)
